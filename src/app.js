@@ -1,10 +1,12 @@
 const path = require("path")
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const planetRouter = require("./routers/planets/planets_routes");
 const launchRouter = require("./routers/launches/launches_routes");
 const { loadPlanetsData } = require("./models/planets_models")
 
+const mongo_url = "mongodb+srv://sarthaktailor:FgAD7m0M6v3H70pS@starlink.m3cvb4q.mongodb.net/?retryWrites=true&w=majority"
 const app = express();
 
 app.use(cors({
@@ -21,6 +23,13 @@ app.get("/*",(req,res)=>{
 })
 
 async function startServer(){
+    await mongoose.connect(mongo_url)
+    .then(()=>{
+        console.log("Database connected");
+    })
+    .catch((err)=>{
+        console.log(err);
+    })
     await loadPlanetsData;
     app.listen(8000,()=>{
         console.log("listening");

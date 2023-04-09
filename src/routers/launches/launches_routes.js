@@ -1,15 +1,16 @@
 const express = require("express");
 const {
     getAllLaunches ,
-    addNewLaunch,
     existsLaunchWithID,
-    abortLaunchWithID
+    abortLaunchWithID,
+    scheduleNewLaunch
 } = require("../../models/launches_model");
 
 const launchRouter = express.Router();
 
-launchRouter.get("/",(req,res)=>{
-    res.status(200).json(getAllLaunches());
+launchRouter.get("/",async(req,res)=>{
+    const allLaunches = await getAllLaunches();
+     return res.status(200).send(allLaunches);
 })
 
 launchRouter.post("/",(req,res)=>{
@@ -19,9 +20,9 @@ launchRouter.post("/",(req,res)=>{
     if(isNaN(launch.launchDate)){
         throw new Error("Invalid date")
     }
-    addNewLaunch(launch);
+    const newLaunch = scheduleNewLaunch(launch);
 
-    return res.status(201).json(launch);
+    return res.status(201).json(newLaunch);
 })
 
 launchRouter.delete("/:id",(req,res)=>{
