@@ -2,7 +2,8 @@ const express = require("express");
 const {
     getAllLaunches ,
     addNewLaunch,
-    existsLaunchWithID
+    existsLaunchWithID,
+    abortLaunchWithID
 } = require("../../models/launches_model");
 
 const launchRouter = express.Router();
@@ -24,10 +25,15 @@ launchRouter.post("/",(req,res)=>{
 })
 
 launchRouter.delete("/:id",(req,res)=>{
-    const launchID = req.params.id;
+    const launchID = Number(req.params.id);
     if(!existsLaunchWithID(launchID)){
-        return res.send(404).json(aborted)
+        return res.status(404).json({
+            error : "Launch not found",
+        })
     }
+
+    const aborted = abortLaunchWithID(launchID);
+    res.status(200).json(aborted);
 
 })
 module.exports = launchRouter;

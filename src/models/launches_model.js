@@ -16,14 +16,14 @@ const launch = {
 launches.set(launch.flightNumber,launch);
 
 function abortLaunchWithID(launchID){
-    const aborted = launch.get(launchID);
+    const aborted = launches.get(launchID);
     aborted.upcoming = false;
     aborted.success = false;
     return aborted
 }
 
 function existsLaunchWithID(launchID){
-    return launch.has(launchID);
+    return launches.has(launchID);
 }
 
 function getAllLaunches(){
