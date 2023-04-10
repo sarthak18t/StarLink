@@ -13,28 +13,36 @@ launchRouter.get("/",async(req,res)=>{
      return res.status(200).send(allLaunches);
 })
 
-launchRouter.post("/",(req,res)=>{
+launchRouter.post("/",async (req,res)=>{
     const launch = req.body;
 
     launch.launchDate = new Date(launch.launchDate);
     if(isNaN(launch.launchDate)){
         throw new Error("Invalid date")
     }
-    const newLaunch = scheduleNewLaunch(launch);
+    const newLaunch = await scheduleNewLaunch(launch);
 
-    return res.status(201).json(newLaunch);
+    return res.status(201).send(newLaunch);
 })
 
-launchRouter.delete("/:id",(req,res)=>{
+launchRouter.delete("/:id",async(req,res)=>{
     const launchID = Number(req.params.id);
-    if(!existsLaunchWithID(launchID)){
+    if(! await existsLaunchWithID(launchID)){
         return res.status(404).json({
             error : "Launch not found",
         })
     }
 
-    const aborted = abortLaunchWithID(launchID);
-    res.status(200).json(aborted);
+    const aborted = await abortLaunchWithID(launchID);
+
+    if(!aborted){
+        return res.status(404).json({
+            error : "Launch not aborted"
+        })
+    }
+    return res.status(200).json({
+        ok : true,
+    });
 
 })
 module.exports = launchRouter;

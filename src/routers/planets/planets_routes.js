@@ -1,12 +1,12 @@
 const express = require("express");
-//const getAllPlanets = require("./planets_controller");
+const { getAllPlanets } = require("../../models/planets_models");
 //const { planets } = require("../../models/planets_models");
 const planets = require("../../models/planet_schema")
 const planetRouter = express.Router();
 
 planetRouter.get("/",async(req,res)=>{
-    console.log(await planets.find());
-    const habitablePlanets = await planets.find();
+    const habitablePlanets = await getAllPlanets();
+    console.log(habitablePlanets);
     return res.send(habitablePlanets);
 });
 

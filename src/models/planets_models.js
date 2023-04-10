@@ -9,9 +9,9 @@ function isHabitablePlanet(planet) {
 }
 
 async function getAllPlanets(){
-  console.log(await planets.find());
   return await planets.find();
 }
+
 async function savePlanet(data){
     try {
       await planets.updateOne({
@@ -58,4 +58,5 @@ function loadPlanets(){
 loadPlanets();
 module.exports = {
     loadPlanets,
+    getAllPlanets
 }
